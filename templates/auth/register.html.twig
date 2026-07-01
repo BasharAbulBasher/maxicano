@@ -1,0 +1,48 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Hello AuthController!{% endblock %}
+
+{% block body %}
+<style>
+    .auth-register .btn-register
+    {
+        background-color:#820263;
+        color:white;
+    }
+</style>
+
+<div class="auth-register container">
+    <form action="{{ path('auth.registerTest') }}" method="post">
+        <div class="mb-3">
+            <label class="form-label">Email*</label>
+            <input name='email' type="email" class="form-control" placeholder="Email@hotmail.com...." required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password*</label>
+            <input name='password' type="text" class="form-control" placeholder="pasword...." required>
+        </div>
+         <div class="mb-3">
+            <label class="form-label">Rolle*</label>
+            <select name="rolle" class="form-select" aria-label="Default select example" required>
+                <option> </option>
+                <option value="ROLE_USER">User</option>
+                <option value="ROLE_KELLNER">Kellner</option>
+                <option value="ROLE_COOK">Cook</option>
+            </select>
+        </div>
+        <div class="w-100 text-center">
+            <button type="submit" class="btn w-50 btn-register">Register</button>
+        <div>
+
+    </form>
+    <div class="message">
+        {% if data.message is defined and data.message is not empty %}
+        {% if data.success is true %}
+        <div class="text-success w-100 text-center">{{ data.message}}</div>
+        {% else %}
+        <div class="text-danger w-100 text-center">{{ data.message}}</div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

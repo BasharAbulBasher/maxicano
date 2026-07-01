@@ -1,0 +1,132 @@
+{% extends 'cook.html.twig' %}
+{% block title %}Cook Finish{% endblock %}
+{% block body %}
+<style>
+.cook-current .invoices .invoice{
+    background-color: #820263;;
+    border:1px solid white;
+}
+.cook-current .invoices .invoice p{
+    color: #ffbf3f;
+    font-size:25px;
+    margin-bottom:0px;
+}
+.cook-current .invoices .invoice .date, .cook-current .invoices .invoice .name{
+    color: #00a499;
+    font-size:20px;
+}
+.cook-current .invoices .invoice .date{
+    border-bottom:1px solid;
+}
+.cook-current .print{
+    position:fixed;
+    height:100%;
+    width:100%;
+    top:0;
+    left:0;
+    background-color:black;
+    opacity:0.9;
+}
+</style>
+
+<div class="cook-current">
+    <div class="current-invoices p-3">
+        <div id="invoices" class="invoices row">
+
+        </div>
+    </div>
+    <div id="print" class="print d-flex align-items-center justify-content-center visually-hidden">
+            <div id="printInf" class="printInf row w-50">
+                <div onClick="closePrint()" class="col-12 text-end btn text-warning">
+                  <h1><i class="fa fa-window-close" aria-hidden="true"></i></h1>
+                </div>
+                <div class="col-12"><h1>Wöllen Sie diese Rechnung wieder bearbeiten?</h1></div>
+                <div class="col-12"><h3 id="invoiceId-info">Rechnung Drucken</h3></div>
+
+                <div class="col-5" onClick="offenInvoice()">
+                    <h1 class="btn btn-warning w-100">
+                        Ja
+                    </h1>
+                </div>
+                <div class="col-5">
+                    <h1 class="btn btn-warning w-100" onClick="closePrint()">
+                        Nein
+                    </h1>
+                </div>
+
+            </div>
+    </div>
+</div>
+
+<script>
+    var invoices;
+    var invoice_id;
+    getInvoices()
+    //Get All Invoices from Today & Yesterday, they are not CLOSED yet Using Ajax-Request
+    function getInvoices()
+    {
+        $.ajax({
+            url: '{{ path("invoice.finish") }}',
+            type: 'POST',
+            success: function(data) {
+                console.log(data);
+                invoices=data['invoices']
+                setInvoices();
+            }
+        });
+    }
+    function setInvoices()
+    {
+        $("#invoices").empty();
+        //Create the Invoices
+        $.each(invoices, function(index, invoice){
+            $("#invoices").append(
+                "<div class='col-3 invoice'>"+
+                    "<p class='name'><span>"+invoice['firstName']+" </span><span>"+invoice['lastName']+"</span><span> "+invoice['invoiceId']+"</span></p>"+
+                    "<p class='date'>"+invoice['date']+"</p>"+
+                    "<div id='invoice"+invoice['invoiceId']+"'></div>"+
+                "</div>");
+            //Add to Invoice the Orders
+             $.each(invoice['orders'], function(index, order){
+                    $("#invoice"+invoice['invoiceId']).append(
+                        "<p><span>Nr."+order['article']['nr']+" </span><span>"+order['article']['title']+"</span></p>"
+                    )
+             });
+             //Add to Invoice Close Button
+            $("#invoice"+invoice['invoiceId']).append(
+                "<p class='btn btn-warning w-100 text-white' onClick='print("+invoice['invoiceId']+")'> Wieder Bearbeiten </p>"
+            );
+        })
+    }
+    function print(invoiceId)
+    {
+        invoice_id=invoiceId;
+        $("#invoiceId-info").empty();
+        $("#invoiceId-info").text(invoiceId);
+        $("#print").removeClass("visually-hidden");
+    }
+    function offenInvoice()
+    {
+        $.ajax({
+            url: '{{ path("invoice.offenInvoice") }}',
+            data:{
+                'invoiceId':invoice_id,
+                'close':false,
+            },
+            type: 'POST',
+            success: function(data) {
+                console.log(data);
+                invoices=data['invoices'];
+                setInvoices();
+                closePrint();
+            }
+        });
+    }
+    function closePrint()
+    {
+        $("#print").addClass("visually-hidden");
+    }
+
+</script>
+{% endblock %}
+

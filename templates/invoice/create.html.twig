@@ -1,0 +1,113 @@
+{% extends 'customer.html.twig' %}
+
+{% block title %}Customer Login!{% endblock %}
+
+{% block body %}
+<style>
+    .invoice-create .btn-register {
+        background-color: #820263;
+        color: white;
+        font-size: 50px;
+    }
+
+    .invoice-create .articles .article {
+        border-bottom: 1px solid;
+    }
+
+    .invoice-create .articles .article img {
+        width: 100px;
+        height: 100px
+    }
+    .invoice-create .addresses .address
+    {
+        border:1px solid ;
+        padding:5px;
+        text-align:center;
+    }
+    .invoice-create .addresses .address .wahl{
+        border-bottom:1px solid;
+    }
+    .invoice-create .addresses .nowPay
+    {
+        color: #00a499;
+        font-size:30px;
+    }
+    small{
+        font-size:30px;
+
+    }
+    .invoice-create  p{
+        font-size:35px;
+      }
+     .invoice-create .go-to-address a{
+        font-size:30px;
+        color: #ffbf3f;
+        border-bottom:1px solid;
+
+     }
+</style>
+
+<div class="invoice-create p-5">
+    {% set total_price = 0 %}
+    <div class="articles">
+        {% for article in articles %}
+        <div class="article row">
+            <p class="col-2">{{(loop.index)}}</p>
+            <p class="col-3">{{article.title}}</p>
+            <p class="col-3">{{article.description}}</p>
+            {% set total_price = total_price|number_format(2) + article.price|number_format(2) %}
+            <div class="col-2">
+                <img src="/file/article/{{ article.image }}">
+            </div>
+            <p class="col-2">{{article.price|number_format(2)}}€</p>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="row">
+        <p class="col-6">Gesamt Preis:</p>
+        <p class="col-6">{{total_price|number_format(2)}}€</p>
+    </div>
+    <div class="addresses">
+        {% if addresses is not empty %}
+            <form class="row" action="{{ path('invoice.paymentPaypal') }}" method="post">
+            {% for address in addresses %}
+            <div class="address col-4">
+                <div class="wahl d-flex justify-content-center align-items-center">
+                    <input style="width:20px" type="radio" name="addressId" id="exampleRadios1" value="{{ address.id }}">
+                    <label for="exampleRadios1">Lieferaddress</label>
+                </div>
+                <div class="name row">
+                    <p class="col-6">{{address.firstName}}</p>
+                    <p class="col-6">{{address.lastName}}</p>
+                </div>
+                <div class="straat-hausNr row">
+                    <p class="col-6">{{address.street}}</p>
+                    <p class="col-6">{{address.hausNr}}</p>
+                </div>
+                <div class="city-plz row">
+                    <p class="col-6">{{address.plz}}</p>
+                    <p class="col-6">{{address.city}}</p>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="go-to-address">
+                <a class="btn" href="{{ path('address.create') }}"> <i class="fa fa-chevron-right" aria-hidden="true"></i>Add New Address</a>
+            </div>
+            {% if data.errors.addressId is defined %}
+                <small class="text-danger">{{data.errors.addressId}}</small>
+            {% endif %}
+            <button data-turbo="false" type="submit" class="btn btn-warning pay mt-5 nowPay">
+            mit Paypal Betzahlen
+            <i class="fa fa-paypal" aria-hidden="true"></i>
+            </button>
+
+            {% if data.errors.user is defined %}
+                <small class="text-danger">{{data.errors.user}}</small>
+            {% endif %}
+            </form>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

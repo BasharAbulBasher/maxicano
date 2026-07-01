@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticleController!{% endblock %}
+
+{% block body %}
+<style>
+    .article-delete {
+        height: 500px
+    }
+
+    .article-delete .article {
+        background-color: #ffbf3f;
+    }
+
+    .article-delete .article .btn-submit {
+        background-color: #820263;
+        color: white;
+        font-family: fantasy;
+        font-size: 26px;
+    }
+</style>
+
+<div class="article-delete ">
+    {% if result.success == true %}
+    <h2 class="text-center">Would you like rellay to delete this Article???</h2>
+    <div class="article p-5 d-flex justify-content-center align-items-center w-100">
+        <div class="row">
+            <h2 class="nr col-1">{{result.article.nr}}.</h2>
+            <h2 class="title col-4">{{result.article.title}}...........................</h2>
+            <h2 class="price col-6 text-end">{{result.article.price}}€</h2>
+            <div class="image col-12 text-center mt-5"><img class="text-center" style="width:400px;height:200px"
+                    src="/file/article/{{result.article.image }}"> </div>
+            <div class="btns col-12">
+                <form action="{{ path('article.remove') }}" method="post">
+                    <input value="{{ result.article.id }}" name="id" type="hidden">
+                    <button class="btn btn-submit w-100 mt-5" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="message">
+        {% if data.message is defined and data.message is not empty %}
+            {% if data.success is true %}
+            <div class="text-success w-100 text-center">{{ data.message}}</div>
+            {% else %}
+            <div class="text-danger w-100 text-center">{{ data.message}}</div>
+            {% endif %}
+        {% else %}
+        <div class="text-center">{{result.message}}</div>
+        {% endif %}
+    <div>
+    {% endif %}
+</div>
+{% endblock %}

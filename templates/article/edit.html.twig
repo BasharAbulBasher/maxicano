@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticleController!{% endblock %}
+
+{% block body %}
+<style>
+    .article-edit div {
+        font-size: 50px;
+    }
+
+    h1 {
+        font-size: 80px;
+    }
+
+    .article-edit .inputFile {
+        padding: 0px;
+    }
+
+    .article-edit .cover {
+        /*background-color: #ffbf3f;*/
+        border: 30px solid #ffbf3f;
+    }
+
+    .article-edit .cover button {
+        background-color: #820263;
+        ;
+        color: white;
+    }
+
+    .article-edit .image img {
+        width: 300px;
+        height: 300px;
+    }
+</style>
+
+<div class="article-edit d-flex justify-content-center align-items-center w-100 p-5">
+    <div class="cover w-100 p-5 card">
+        <h1 class="text-center"> Article Update</h1>
+        <div class="image text-center">
+            <img src="/file/article/{{ article.image }}">
+        </div>
+        <form action="{{ path('article.update') }}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="">Nr</label>
+                <input value="{{ article.nr }}" name='nr' type="number" class="w-100" placeholder="Nr....">
+                {% if data.err.nr is defined and data.err.nr is not empty %}
+                <small class="text-danger"> {{ data.err.nr}}</small>
+                {% endif %}
+
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Title*</label>
+                <input value="{{ article.title }}" name='title' type="text" class="w-100" placeholder="Title...."
+                    required>
+                {% if data.err.title is defined and data.err.title is not empty %}
+                <small class="text-danger"> {{ data.err.title}}</small>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Image</label>
+                <input name="image" type="file" class="inputFile w-100">
+                {% if data.err.image is defined and data.err.image is not empty %}
+                <small class="text-danger"> {{ data.err.image}}</small>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea name='description' class="" rows="3">{{article.description}}</textarea>
+            </div>
+            <div class="mb-3 row">
+                 <label  class="form-label col-md-12">Category*</label>
+                <select id="categoryInput" name="categoryId" class="col-md-12" required>
+                    {% for category in categories %}
+                        {% if article.categoryId==category.id %}
+                            <option value="{{ category.id }}" selected>{{ category.title }} </option>
+                        {% endif %}
+                            <option value="{{ category.id }}">{{ category.title }} </option>
+                    {% endfor %}
+                </select>
+                {% if data.err.categoryId is defined and data.err.categoryId is not empty %}
+                    <small class="text-danger"> {{ data.err.categoryId}}</small>
+                {% endif %}
+            </div>
+            <div class="price row mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Small Price</label>
+                        {% if article.smallPrice is not empty %}
+                            <input value="{{ article.smallPrice}}" name="smallPrice" type="number" step="0.01" class="w-100">
+                            {% else %}
+                             <input name="smallPrice" type="number" step="0.01" class="w-100">
+                        {% endif %}
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Big Price</label>
+                        {% if article.price is not empty %}
+                            <input value="{{ article.price }}" name="bigPrice" type="number" step="0.01" class="w-100">
+                            {% else %}
+                             <input name="bigPrice" type="number" step="0.01" class="w-100">
+                        {% endif %}
+                    </div>
+                {% if data.err.price is defined and data.err.price is not empty %}
+                <div class="col-12">
+                    <small class="text-danger"> {{ data.err.price}}</small>
+                </div>
+                {% endif %}
+            </div>
+            <input value="{{ article.id }}" name="id" type="hidden">
+            <div class="w-100 text-center">
+                <button type="submit" class=" w-50">Update</button>
+                <div>
+        </form>
+
+        <div class="message">
+            {% if data.message is defined and data.message is not empty %}
+            {% if data.success is true %}
+            <div class="text-success w-100 text-center">{{ data.message}}</div>
+            {% else %}
+            <div class="text-danger w-100 text-center">{{ data.message}}</div>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div>
+        </div>
+        {% endblock %}

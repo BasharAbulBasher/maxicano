@@ -1,0 +1,135 @@
+{% extends 'cook.html.twig' %}
+{% block title %}Cook Current{% endblock %}
+{% block body %}
+<style>
+    .cook-setting .accordion-button
+    {
+        font-size:40px;
+        background-color: #ffbf3f;
+        color: #00a499;
+
+
+    }
+    .cook-setting p{
+        font-size:30px;
+        color: #ffbf3f;
+    }
+    .cook-setting .article img{
+        width:100px;
+        height:100px;
+    }
+    .cook-setting .wait-ajax
+    {
+        position:fixed;
+        width:100%;
+        height:100%;
+        top:0;
+        left:0;
+        background-color:black;
+        opacity:0.8;
+    }
+    .spinner-grow{
+        width:200px;
+        height:200px;
+    }
+</style>
+
+<div class="cook-setting container p-5">
+
+    <div class="accordion" id="accordionExample">
+            {% for category in categories %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ category.id }}">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ category.id }}" aria-expanded="true"
+                        aria-controls="collapse{{ category.id }}">
+                        {{ category.title }}
+                    </button>
+                </h2>
+                <div id="collapse{{ category.id }}" class="accordion-collapse collapse show"
+                    aria-labelledby="heading{{ category.id }}" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        {% for article in category.articles %}
+                        <div class="article row mb-2">
+                            <div class="nr-title col-4">
+                                <p>{{article.nr}}.{{article.title}}</p>
+                            </div>
+                            <div class="image col-4 text-center">
+                                <img src="/file/article/{{ article.image }}">
+                            </div>
+                            <div class="col-4 row">
+                                {% if article.soldOut == true %}
+                                   <input class="form-check-input col-6" type="checkbox"  onClick="soldIn({{article.id}})"  checked>
+                                  <p class="col-6 mt-3"> ausverkauft</p>
+                                {% else %}
+                                   <input class="form-check-input" type="checkbox"  onClick="soldOut({{article.id}})">
+                                     <p class="col-6 mt-3"> ausverkauft</p>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    </div>
+    <div id="wait-ajax" class="wait-ajax d-flex align-items-center justify-content-center visually-hidden">
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#wait-ajax").addClass("visually-hidden");
+    });
+//Article is soldIn 'Article ist NICHT AUSVERKAUFT'
+function soldIn(articleId)
+{
+    $("#wait-ajax").removeClass("visually-hidden");
+    //Sett the Spinnig
+    $("#wait-ajax").removeClass("visually-hidden");
+    //Ajax-Request
+        $.ajax({
+        url: '{{ path("cook.soldIn") }}',
+        data:{
+                'articleId':articleId,
+        },
+        type: 'POST',
+        success: function(data) {
+        location.reload();
+
+        }
+    });
+}
+//Article is soldOut 'Article ist AUSVERKAUFT'
+function soldOut(articleId)
+{
+    //Sett the Spinnig
+    $("#wait-ajax").removeClass("visually-hidden");
+    //Ajax-Request
+        $.ajax({
+        url: '{{ path("cook.soldOut") }}',
+        data:{
+                'articleId':articleId,
+        },
+        type: 'POST',
+        success: function(data) {
+        location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}

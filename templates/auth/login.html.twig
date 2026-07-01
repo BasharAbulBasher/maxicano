@@ -1,0 +1,71 @@
+{% extends 'home.html.twig' %}
+
+{% block title %}Hello AuthController!{% endblock %}
+
+{% block body %}
+<style>
+
+ .auth-login {
+     height:1000px;
+     font-size:50px;
+     font-family: fantasy;
+ }
+    .auth-login .btn-register
+    {
+        background-color:#820263;
+        color:white;
+         font-size:50px;
+    }
+
+    .auth-login .form h1{
+        letter-spacing:10px;
+        font-size:100px;
+    }
+    input
+    {
+        font-size:50px;
+        border:none;
+        border-bottom:1px solid #820263;
+    }
+    input::placeholder{
+         font-size:50px;
+    }
+    input:focus{
+        outline: none;
+    }
+</style>
+
+<div id="auth-login" class="auth-login">
+
+    <div class="h-100  d-flex justify-content-center align-items-center">
+        <form class="form p-3 h-75 col-12" action="{{ path('auth.loginTest') }}" method="post">
+        <h1 class="text-center">YOUR LOGO</h1>
+            <div class="mb-1 h-25 row">
+                <label class="form-label col-12">Email*</label>
+                <input name='email' type="email" class="col-12 h-50" placeholder="Email@hotmail.com...." required>
+            </div>
+            <div class="mb-1 h-25 row">
+                <label class="form-label col-12">Password*</label>
+                <input name='password' type="text" class="col-12 h-50" placeholder="pasword...." required>
+            </div>
+
+            <div class="w-100 h-25 text-center">
+                <button type="submit" class="btn w-50 h-50 btn-register">Login</button>
+            <div>
+        </form>
+
+        <div class="message">
+            {% if data.message is defined and data.message is not empty %}
+            {% if data.success is true %}
+            <div class="text-success w-100 text-center">{{ data.message}}</div>
+            {% else %}
+            <div class="text-danger w-100 text-center">{{ data.message}}</div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+

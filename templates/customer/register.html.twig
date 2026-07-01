@@ -1,0 +1,85 @@
+{% extends 'customer.html.twig' %}
+
+{% block title %}Customer Login!{% endblock %}
+
+{% block body %}
+<style>
+.customer-register {
+height:1000px;
+font-size:50px;
+font-family: fantasy;
+}
+.customer-register small{
+    font-size:43px;
+}
+.customer-register .btn-register
+{
+background-color:#820263;
+color:white;
+font-size:50px;
+}
+.customer-register .register a
+{
+    font-size:40px;
+    margin-bottom:-20px;
+}
+input
+{
+font-size:50px;
+border:none;
+border-bottom:1px solid #820263;
+}
+input::placeholder{
+font-size:50px;
+}
+input:focus{
+outline: none;
+}
+</style>
+
+<div class="customer-register">
+    <h1 class="text-center">Register</h1>
+    <div class="d-flex justify-content-center align-items-center">
+        <form class="form p-3 h-75 col-12" action="{{ path('customer.registerTest') }}" method="post">
+            <div class="mb-1 h-25 row">
+                <label class="form-label col-12">Email*</label>
+                <input name='email' type="email" class="col-12 h-50" placeholder="Email@hotmail.com...." required>
+                {% if data.errors.email is defined %}
+                <small class="text-danger">{{ data.errors.email }}</small>
+                {% endif %}
+            </div>
+            <div class="mb-1 h-25 row">
+                <label class="form-label col-12">Password*</label>
+                <input name='password' type="text" class="col-12 h-50" placeholder="pasword...." required>
+                {% if data.errors.password is defined %}
+                <small class="text-danger">{{ data.errors.password }}</small>
+                {% endif %}
+            </div>
+            <div class="mb-1 h-25 row">
+                <label class="form-label col-12">ConfirmPassword*</label>
+                <input name='confirmPassword' type="text" class="col-12 h-50" placeholder="pasword...." required>
+                {% if data.errors.confirmPassword is defined %}
+                <small class="text-danger">{{ data.errors.confirmPassword }}</small>
+                {% endif %}
+            </div>
+            <div class="w-100 h-25 text-center">
+                <button type="submit" class="btn w-50 h-50 btn-register">Register</button>
+            <div>
+        </form>
+
+        <div class="message">
+            {% if data.message is defined and data.message is not empty %}
+            {% if data.success is true %}
+            <div class="text-success w-100 text-center">{{ data.message}}</div>
+            {% else %}
+            <div class="text-danger w-100 text-center">{{ data.message}}</div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+

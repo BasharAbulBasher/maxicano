@@ -1,0 +1,80 @@
+{% extends 'kellner.html.twig' %}
+
+{% block title %}Kellner Index!{% endblock %}
+
+{% block body %}
+<style>
+    img {
+        width: 100px;
+        height: 100px;
+    }
+    .kellner-home .accordion-button{
+        font-size:xxx-large;
+    }
+    .kellner-home .article-image
+    {
+        width:100px;
+        height:100px;
+    }
+    .kellner-home .article-show{
+        background-color:#ffbf3f;
+        color:white;
+    }
+</style>
+
+<div class="kellner-home container">
+    <div>
+        <h1 class="text-center">Kellner-Home</h1>
+    </div>
+    <div class="accordion" id="accordionExample">
+    {% for category in categories %}
+        <div class="accordion-item">
+            <h2 class="accordion-header text-center" id="heading{{ category.id }}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ category.id }}"
+                    aria-expanded="true" aria-controls="collapse{{ category.id }}">
+                    {{ category.title }}
+                </button>
+            </h2>
+            <div id="collapse{{ category.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ category.id }}"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {% for article in category.articles %}
+                        <div class="article">
+                            <div class="row">
+                                <h2 class="col-2">Nr.{{ article.nr }}</h2>
+                                <h2 class="col-5">{{ article.title }}</h2>
+                                <h2 class='col-1'> {{article.price}}€</h2>
+                                <h2 class="col-2"><img class="article-image" src="/file/article/{{ article.image }}"></h2>
+                                <h2 class="col-2"><button class="article-show btn w-100">Show</button></h2>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+<script>
+    function play() {
+        var inf = {
+            start: true,
+        }
+        sendToPusher("screen");
+    }
+
+    function sendToPusher(channel, inf) {
+        $.ajax({
+            url: '{{ path("pusher.push") }}',
+            data: {
+                inf: inf,
+                channel: channel
+            },
+            type: 'Post',
+            success: function(data) {
+                console.log(data)
+            }
+        });
+    }
+</script>
+{% endblock %}

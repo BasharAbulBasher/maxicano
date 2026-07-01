@@ -1,0 +1,59 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Hello CategoryController!{% endblock %}
+
+{% block body %}
+<style>
+.category-show  .image img{
+    width:100%;
+    height:200px;
+}
+.category-show .categories .category{
+    background-color: #ffbf3f;
+}
+.category-show .categories .category .update{
+    background-color: #00a499;
+    color:white
+}
+.category-show .categories .category .delete{
+    background-color: #820263;;
+    color:white
+}
+.category-show  span{
+    color: white;
+}
+
+</style>
+
+<div class="category-show container">
+    <div class="categories row">
+        {% for category in categories %}
+            <div class="category col-md-3 p-3 m-2 card">
+                <div class="image">
+                    <img src="/file/category/{{ category.image }}">
+                </div>
+                <div class="title">
+                    {% if category.nr is not empty %}
+                        <h4 class="text-center"><span>{{category.nr}}.</span>{{category.title}}</h4>
+                        {% else %}
+                        <p><span>-</span>{{category.title}}</p>
+                    {% endif %}
+                </div>
+                <div class="size">
+                    {% if category.size == true %}
+                        <p class="text-center">With Size</p>
+                        {% else %}
+                        <p class="text-center">Without Size</p>
+                    {% endif %}
+                </div>
+
+                <div class="row">
+                    <a class="col-6 btn update" href="/admin/category/edit/{{ category.id }}">Update</a>
+                    <a id="category-delete-btn" class="col-6 btn delete" href="/admin/category/delete/{{ category.id }}">Delete</a>
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

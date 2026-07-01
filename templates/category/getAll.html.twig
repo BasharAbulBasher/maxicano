@@ -1,0 +1,289 @@
+{% extends 'customer.html.twig' %}
+
+{% block title %}Customer {% endblock %}
+
+{% block body %}
+<style>
+.category-getAll .categories{
+    border-bottom:1px solid;
+}
+.category-getAll .warenkorp{
+    border-bottom:1px solid;
+    border-left:5px solid;
+}
+.category-getAll .categories .category .image img{
+    width:150px;
+    height:150px;
+}
+.category-getAll .categories .category .title p{
+    font-size: 35px;
+}
+.category-getAll .category-title{
+    color: white;
+    background-color: #820263;
+    padding:10px;
+    margin-top:5px;
+}
+.category-getAll .articles .articles-content .article{
+    height:400px;
+}
+.category-getAll .articles .articles-content .article img{
+    width:150px;
+    height:40%;
+}
+.category-getAll .articles .articles-content .article .article-title{
+    font-size: 40px;
+    height:10%;
+    border-bottom:2px solid;
+    padding:-5px;
+}
+.category-getAll .articles .articles-content .article .article-description{
+    font-size: 30px;
+    height:20%;
+}
+.category-getAll .articles .articles-content .article .article-price{
+    font-size: 40px;
+    height:10%;
+    color: #ffbf3f;
+}
+.category-getAll .articles .articles-content .article .btn-warning{
+    color:white;
+    font-size: 30px;
+     height:15%;
+}
+.category-getAll .articles .articles-content .article .soldOut
+{
+    color: #00a499;
+    font-size:30px;
+}
+.category-getAll .wait-ajax
+{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    background-color:black;
+    opacity:0.8;
+}
+.spinner-grow{
+    width:200px;
+    height:200px;
+}
+
+</style>
+<div class="category-getAll row p-2">
+    <div class="categories col-7 row">
+        {% for category in categories %}
+            <div class="category col-md-4 col-lg-3 btn" onclick="getArticles({{ category.id }})">
+                <div class="image">
+                    <img src="/file/category/{{ category.image }}">
+                </div>
+                <div class="title">
+                    <p>{{category.title}}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="warenkorp col-5">
+        <div id="cart">
+        </div>
+        {% if  is_granted('ROLE_CUSTOMER') %}
+        <div class="mt-3"><a onClick="goToKasse(event)" class="btn btn-warning w-100">Go To Kasse</a></div>
+        <p id="goToKasse-message"></p>
+        {% else %}
+        <div class="mt-3"><a class="btn btn-warning w-100" href="/customer/login">Melden Sie sich</a></div>
+        {% endif %}
+    </div>
+    <div class="articles" id="articles">
+    </div>
+    <div id="wait-ajax" class="wait-ajax d-flex align-items-center justify-content-center visually-hidden">
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+    </div>
+</div>
+<script>
+    var articles;
+    var cart;
+    var total_price=0;
+
+    //getSession
+    getSession();
+    //Get All Articles
+    function getArticles(categoryId)
+    {
+        //Get All Articles Using Ajax
+        $.ajax({
+            url: '{{ path("article.getAll") }}',
+            data: {
+                    categoryId: categoryId,
+            },
+            type: 'POST',
+            success: function(data) {
+                articles=data['category']['articles'];
+                setArticles(data['category'])
+            }
+        });
+    }
+    //Set the Articles in Div #articles
+    function setArticles(category)
+    {
+        $("#articles").empty();
+        $("#articles").append(
+            "<div>"+
+                "<h1 id='pos' class='category-title text-center'>"+category['title']+"</h1>"+
+                "<div id='articles-content' class='row articles-content p-5 text-center'></div>"+
+            "</div>");
+        $.each(category['articles'],function(index, article){
+               $("#articles-content").append(
+                    "<div id='article"+article['id']+"' class='article col-4'>"+
+                        "<img src='/file/article/"+article['image']+"'>"+
+                         "<h1 class='article-title'>"+article['title']+"</h1>"+
+                        "<h2 class='article-description'>"+article['description']+"</h2>"+
+                        "<h3 class='article-price'>"+article['price'].toFixed(2)+"€</h3>"+
+                    "</div>");
+            if(article['soldOut']== true)
+            {
+                $("#article"+article['id']).append("<p class='soldOut text-center'>Ausverkauft</p>")
+            }
+            else{
+                $("#article"+article['id']).append("<p onclick='addToCart("+article['id']+")' class='btn btn-warning w-100'>Add To <i class='fa fa-shopping-cart' aria-hidden='true'></i> </p>")
+            }
+        })
+        scrollToCategory();
+    }
+    //Scroll to Category
+    function  scrollToCategory(){
+    $('html').animate(
+        {
+            scrollTop: $("#pos").offset().top,
+            },
+            500 //speed
+        );
+    }
+
+    //Form the Cart
+    function setCart()
+    {
+        total_price=0;
+        $("#cart").empty();
+        $.each(cart, function(index,article)
+        {
+        total_price=total_price+article['price']
+        $("#cart").append(
+            "<div class='row' style='font-size:40px; border-bottom:1px solid;'>"+
+                "<p class='col-1'>"+(index+1)+"</p>"+
+                "<p class='col-4'>"+article['title']+"</p>"+
+                "<p class='col-2'>"+article['price'].toFixed(2)+"€</p>"+
+                "<div class='col-4 text-end'>"+
+                    "<img style='width:80px;height:80px;' src='/file/article/"+article['image']+"'>"+
+                "</div>"+
+                "<div style='font-size:40px' onclick='removeFromCart("+index+")' class='text-warning col-1 btn'><i class='fa fa-minus-circle' aria-hidden='true'></i></div>"+
+            "</div>")
+        })
+        $("#cart").append("<h3>Gesamt Price:"+total_price.toFixed(2)+"€</h3>");
+        hiddenTempWaitAjax()
+    }
+    //Add Article to Cart
+    function addToCart(articleId)
+    {
+        //Show Template Ajax
+         showTempWaitAjax()
+        //Add the Article In Session Using Ajax
+        addInSession(articleId)
+    }
+    //Remove Article from Cart
+    function removeFromCart(index)
+    {
+        //Show Template Ajax
+         showTempWaitAjax()
+        //Remove the Article from Session Using Ajax
+        removeFromSession(index)
+    }
+    //Go to Kasse
+    function goToKasse(event)
+    {
+
+        $("#goToKasse-message").empty();
+        if(total_price < 50)
+        {
+            $("#goToKasse-message").text("Wir Liefern AB 50€");
+        }
+        else{
+            window.location.href = '/customerrole/invoice/create';
+        }
+    }
+    //Add To Cart
+    function addInSession(articleId)
+    {
+        //Ajax-Request to save the articleId in Session
+        $.ajax({
+            url: '{{ path("cart.add")}}',
+            data: {
+                    articleId: articleId,
+            },
+            type: 'POST',
+            success: function(data) {
+                console.log(data)
+                getSession();
+            }
+        });
+    }
+    //Remove from Cart
+    function removeFromSession(index)
+    {
+        //Ajax-Request to delete the articleId from Session
+        $.ajax({
+            url: '{{ path("cart.delete")}}',
+            data: {
+                    index: index,
+            },
+            type: 'POST',
+            success: function(data) {
+                console.log(data)
+                getSession()
+            }
+        });
+    }
+    //Get The Cart
+    function getSession()
+    {
+        //Show Template Ajax
+         showTempWaitAjax()
+        //Ajax-Request to get the Cart
+        $.ajax({
+            url: '{{ path("cart.get")}}',
+            data: {
+            },
+            type: 'POST',
+            success: function(data) {
+                console.log(data)
+                cart=data["cart"]
+                setCart();
+            }
+        });
+    }
+    //Show Template Wait-Ajax
+    function showTempWaitAjax()
+    {
+        $("#wait-ajax").removeClass("visually-hidden")
+    }
+    //Hidden Template Wait-Ajax
+    function hiddenTempWaitAjax()
+    {
+        $("#wait-ajax").addClass("visually-hidden")
+
+    }
+
+</script>
+{% endblock %}

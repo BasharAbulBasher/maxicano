@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WerbungController!{% endblock %}
+
+{% block body %}
+<style>
+    .werbung-show {
+        height: 750px;
+    }
+
+    .werbung-show h1 {
+        font-size: 100px;
+    }
+
+    .werbung-show h2 {
+        font-size: 50px;
+        color: #00a499;
+    }
+
+    .werbung-show span {
+        color: #00a499;
+    }
+
+    .werbung-show .werbung,
+    .werbung-show .image,
+    .werbung-show .video {
+        border: 2px solid #820263;
+    }
+     .werbung-show .image img{
+        width:100%;
+        height:300px;
+     }
+
+    .werbung-show .btn-update {
+        background-color: #820263;
+        color: white;
+        font-size: 50px;
+    }
+
+    .werbung-show .btn-delete {
+        background-color: #ffbf3f;
+        color: white;
+        font-size: 50px;
+    }
+
+    .werbung-show video {
+        width: -webkit-fill-available;
+    }
+</style>
+
+<div class="werbung-show p-5">
+    <div class="message">
+        {% if data.message is defined and data.message is not empty %}
+        {% if data.success is true %}
+        <div class="text-success w-100 text-center">{{ data.message}}</div>
+        {% else %}
+        <div class="text-danger w-100 text-center">{{ data.message}}</div>
+        {% endif %}
+        {% endif %}
+    </div>
+    {% for werbung in werbungen %}
+    <div class="werbung row card mb-4 p-5">
+        <h1 class="text-center col-md-12">Werbung-Nr.{{werbung.nr}}</h1>
+        <div class="image-video row">
+            <div class="col-6 image">
+                {% if werbung.image is not empty %}
+                <div><img src="/file/werbung/{{ werbung.image }}"></div>
+                {% else %}
+                <div>
+                    <p>NO Image</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-6 video">
+                <div>
+                    {% if werbung.video is not empty %}
+                    <video controls>
+                        <source src="/file/werbung/{{ werbung.video }}" type="video/mp4">
+                    </video>
+                    <div class="length col-md-6 "><p>Video-Length: {{werbung.length}} in Sekunden</p></div>
+                    {% else %}
+                    <div>
+                        <p>NO Video</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="title col-md-6 ">{{werbung.title}}</div>
+            {% if werbung.price is not empty %}
+            <div class="price col-md-6 text-end">{{werbung.price}}€</div>
+            {% endif %}
+        </div>
+        <div class="description col-md-12 text-center">
+            <p>{{werbung.description}}</p>
+        </div>
+        <div class="screens col-md-12">
+            <h2>Screens:</h2>
+            {% for screen in werbung.screens %}
+            <p class="screen"><span><i class="me-2 fa fa-check-square" aria-hidden="true"></i></span>{{screen.title}}
+            </p>
+            {% endfor %}
+        </div>
+        <div class="btns row">
+            <div class="col-md-6">
+                <a href="/user/werbung/edit/{{ werbung.id }}" class="btn btn-update w-75">Update</a>
+            </div>
+            <div class="col-md-6 text-end">
+                <a href="/user/werbung/delete/{{ werbung.id }}" class="btn btn-delete w-75">Delete</a>
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

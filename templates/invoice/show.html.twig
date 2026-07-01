@@ -1,0 +1,104 @@
+{% extends 'customer.html.twig' %}
+
+{% block title %}Customer Invoices!{% endblock %}
+
+{% block body %}
+<style>
+.invoice-show .message .asowme{
+    font-size:200px;
+}
+.invoice-show .message  .text{
+    font-size:50px;
+}
+.invoice-show .invoice .address{
+    border-left:10px solid #ffbf3f;
+}
+.invoice-show .invoice .address h1{
+    color: #595151;
+}
+.invoice-show .invoice .address p{
+    margin-bottom:-10px;
+    color: #595151;
+    font-size:30px;
+}
+.invoice-show .invoice .address .lastInvoice
+{
+    margin-bottom:-10px;
+    color: #595151;
+    font-size:20px;
+}
+.invoice-show .invoice .orders .table img{
+    width:100px;
+    height:100px;
+}
+.invoice-show .invoice .orders .table{
+    font-size:30px;
+    color: #595151
+}
+
+</style>
+<div class="invoice-show">
+    {% if data.success is defined %}
+        {% if data.success == true %}
+            <div class="message d-flex justify-content-center align-items-center">
+                <div class="asowme text-success">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                </div>
+                <div class="text text-success mt-4 text-center">
+                    <p>{{data.message}}</p>
+                </div>
+            </div>
+            {% else %}
+                <div class="message d-flex justify-content-center align-items-center">
+                <div class="asowme text-danger">
+                    <i class="fa fa-window-close" aria-hidden="true"></i>
+                </div>
+                <div class="text text-danger mt-4 text-center">
+                    <p>{{data.message}}</p>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    <div class="invoice p-5">
+        <div class="address">
+            <h1>RechnungsNr:{{lastInvoice.invoiceId}}</h1>
+            <p>{{lastInvoice.date}}</p>
+            <p>{{lastInvoice.firstName}} {{lastInvoice.lastName}}</p>
+            <p>{{lastInvoice.street}} {{lastInvoice.hausNr}}</p>
+            <p>{{lastInvoice.plz}} {{lastInvoice.city}}</p>
+            <p class="lastInvoice">Ihre letzte Bestellung war am: {{lastInvoice.date}}</p>
+        </div>
+        <div class="orders w-75">
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% set total_price = 0 %}
+                    {% for order in lastInvoice.orders %}
+                    <tr>
+                        <td>{{order.article.title}}</td>
+                        <td>{{order.article.description}}</td>
+                        <td><img src="/file/article/{{order.article.image}}"></td>
+                        <td>{{order.article.price|number_format(2)}}€</td>
+                        {% set total_price = total_price|number_format(2) + order.article.price|number_format(2) %}
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <th scope="col">Gesamt Preis:</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col">{{total_price|number_format(2)}}€</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

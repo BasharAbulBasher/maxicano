@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticleController!{% endblock %}
+
+{% block body %}
+<style>
+.article-create  div{
+      font-size:50px;
+}
+h1{
+    font-size: 80px;
+}
+.article-create .inputFile{
+    padding: 0px;
+}
+.article-create .cover{
+    /*background-color: #ffbf3f;*/
+     border: 30px solid  #ffbf3f;
+}
+.article-create .cover button{
+    background-color: #820263;;
+    color:white;
+}
+</style>
+
+<div class="article-create d-flex justify-content-center align-items-center w-100 p-5">
+    <div class="cover w-100 p-5 card">
+        <h1> Article Create</h1>
+        <form  action="{{ path('article.save') }}" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label  class="form-label">Nr</label>
+                <input  name='nr' type="number" class="w-100" placeholder="Nr...." >
+                 {% if data.err.nr is defined and data.err.nr is not empty %}
+                    <small class="text-danger"> {{ data.err.nr}}</small>
+                {% endif %}
+
+            </div>
+            <div class="mb-3">
+                <label  class="form-label">Title*</label>
+                <input name='title' type="text" class="w-100" placeholder="Title...." required>
+                {% if data.err.title is defined and data.err.title is not empty %}
+                    <small class="text-danger"> {{ data.err.title}}</small>
+                {% endif %}
+            </div>
+            <div class="price row">
+                <div class="price-small col-6">
+                    <label  class="form-label">Price 'Small'</label>
+                    <input name='smallPrice' type="number" step="0.01" class="w-100" >
+                </div>
+                <div class="price-big col-6">
+                    <label  class="form-label">Price 'Big'</label>
+                    <input name='bigPrice' type="number" step="0.01" class="w-100" >
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label  class="form-labe col-md-12">Image*</label>
+                <input name="image" type="file" class="col-md-12 w-100 inputFile" required>
+                {% if data.err.image is defined and data.err.image is not empty %}
+                    <small class="text-danger"> {{ data.err.image}}</small>
+                {% endif %}
+            </div>
+            <div class="mb-3 row">
+                 <label  class="form-label col-md-12">Category*</label>
+                <select id="categoryInput" name="categoryId" class="col-md-12" required>
+                    <option value="0" selected> </option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.title }} </option>
+                    {% endfor %}
+                </select>
+                {% if data.err.categoryId is defined and data.err.categoryId is not empty %}
+                    <small class="text-danger"> {{ data.err.categoryId}}</small>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label  class="form-label">Description</label>
+                 <textarea name='description' class="" rows="3"></textarea>
+            </div>
+
+            <div class="w-100 text-center">
+                <button type="submit" class="w-50">Create</button>
+            <div>
+        </form>
+        <div class="message">
+            {% if data.message is defined and data.message is not empty %}
+                {% if data.success is true %}
+                      <div  class="text-success w-100 text-center">{{ data.message}}</div>
+                      {% else %}
+                       <div  class="text-danger w-100 text-center">{{ data.message}}</div>
+                {% endif %}
+            {% endif %}
+        </div>
+    <div>
+</div>
+<script>
+
+</script>
+{% endblock %}
+

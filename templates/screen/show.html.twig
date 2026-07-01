@@ -1,0 +1,25 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Hello ScreenController!{% endblock %}
+
+{% block body %}
+<style>
+</style>
+
+<div class="screen-show">
+    <div class="screens row">
+        {% for screen in screens %}
+        <div class="screen col-3 card p-5">
+            <h2 class="text-center">{{screen.title}}</h2>
+            <div class="row">
+            <h2 class="col-6"><a href="/admin/screen/edit/{{ screen.id }}" class="btn">Update</a></h2>
+            <h2 class="col-6"><a href="/admin/screen/delete/{{ screen.id }}" class="btn">Delete</a></h2>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+

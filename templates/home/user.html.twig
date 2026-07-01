@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<style>
+
+    img {
+        width: 100px;
+        height: 100px;
+    }
+    .home-index .play-ptn{
+        font-size:50px
+    }
+
+</style>
+
+<div class="home-index text-center">
+    <div><h1>User-Home</h1></div>
+    <button class="btn btn-warning play-ptn w-50" onclick="play()">Play</button>
+</div>
+<script>
+    function play() {
+        var inf={
+            start:true,
+        }
+        sendToPusher("screen");
+    } 
+
+    function sendToPusher(channel, inf) {
+        $.ajax({
+            url: '{{ path("pusher.push") }}',
+            data: {
+                inf: inf,
+                channel:channel
+            },
+            type: 'Post',
+            success: function(data) {
+                console.log(data)
+            }
+        });
+    }
+
+
+</script>
+{% endblock %}

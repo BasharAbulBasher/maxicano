@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WerbungController!{% endblock %}
+
+{% block body %}
+<style>
+.werbung-delete{
+    height:750px;
+}
+.werbung-delete h1{
+     font-size:100px;
+}
+.werbung-delete .btn-no{
+     font-size:60px;
+     background-color:#820263;
+     color:white;
+}
+.werbung-delete .btn-yes{
+     font-size:60px;
+     background-color:#ffbf3f;
+     color:white;
+}
+
+
+</style>
+
+<div class="werbung-delete p-5">
+    {% if success == true %}
+        <h1>{{message}}</h1>
+        <form class="row" action="{{ path('werbung.remove') }}" method="post">
+            <input name="id" type="hidden" value="{{ werbung.id }}">
+            <a href="/user/werbung/show" class="col-6 btn btn-no">Nein</a>
+            <button type="submit" class="col-6 btn btn-yes">Ja</button>
+        </form>
+    {% else %}
+    <h1 class="text-danger">{{message}}</h1>
+    {% endif %}
+</div>
+{% endblock %}

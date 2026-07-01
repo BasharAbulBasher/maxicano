@@ -1,0 +1,52 @@
+{% extends 'admin.html.twig' %}
+
+{% block title %}Hello ScreenController!{% endblock %}
+
+{% block body %}
+<style>
+    .screen-delete {
+        height: 500px;
+    }
+
+    .screen-delete .btn {
+
+        color: white;
+        font-size: 50px;
+    }
+
+    .screen-delete .btn-lila {
+        background-color: #820263;
+    }
+
+    .screen-delete .btn-gelb {
+        background-color: #ffbf3f;
+    }
+</style>
+
+<div class="screen-delete">
+    {% if screen is not empty %}
+    <form method="post" action="{{ path('screen.remove') }}">
+        <h2 class="text-center">Would you like relley to delete Screen {{screen.title}} ?</h2>
+        <input type="hidde" value="{{ screen.id }}" name="id">
+        <div class="row p-5">
+            <a class="btn btn-gelb col-6" href="/admin/screen/show">Nein</a>
+            <button type="submit" class="btn col-6 btn-lila">Ja</button>
+        </div>
+    </form>
+    {% else %}
+    <div class="message">
+        {% if data.message is defined and data.message is not empty %}
+        {% if data.success is true %}
+        <div class="text-success w-100 text-center">{{ data.message}}</div>
+        {% else %}
+        <div class="text-danger w-100 text-center">{{ data.message}}</div>
+        {% endif %}
+        {% endif %}
+        <div class="text-center">
+          <a class="btn btn-gelb w-75 " href="/admin/screen/show">Back</a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

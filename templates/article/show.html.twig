@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ArticleController!{% endblock %}
+
+{% block body %}
+<style>
+    .article-show .accordion-button {
+        background-color: white;
+        color: #820263;
+    }
+
+    .article-show .btn-update {
+        background-color: #820263;
+        color: white;
+        font-size: 30px;
+    }
+
+    .article-show .btn-delete {
+        background-color: #ffbf3f;
+        color: white;
+        font-size: 30px;
+
+    }
+
+    .accordion-button {
+        font-size: 40px;
+    }
+
+    .accordion-body p {
+        font-size: 35px;
+    }
+</style>
+
+<div class="article-show  container-lg">
+    <div class="accordion" id="accordionExample">
+        {% for category in categories %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ category.id }}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{ category.id }}" aria-expanded="true"
+                    aria-controls="collapse{{ category.id }}">
+                    {{ category.title }}
+                </button>
+            </h2>
+            <div id="collapse{{ category.id }}" class="accordion-collapse collapse"
+                aria-labelledby="heading{{ category.id }}" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    {% for article in category.articles %}
+                    <div class="article row mb-2">
+                        <p class="nr-title col-4">{{article.nr}}.{{article.title}}</p>
+                        <div class="image col-4">
+                            <img class="w-100" style="height:200px" src="/file/article/{{ article.image }}">
+                        </div>
+                        <div class="price col-4 row">
+                            <p>Small:{{article.smallPrice}}€</p>
+                            <p>Big:{{article.price}}€</p>
+                        </div>
+                        <div class="btns col-12 m-2">
+                            <a href="/user/article/edit/{{ article.id }}" class="btn btn-update w-100">Update</a>
+                            <a href="/user/article/delete/{{ article.id }}" class="btn btn-delete w-100">Delete</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

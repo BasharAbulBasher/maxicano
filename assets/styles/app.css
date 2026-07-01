@@ -1,3 +1,55 @@
-body {
-    background-color: skyblue;
+div{
+    color: #00a499;
+    color: #ffbf3f;
+    color: #f75c03;
+    color: #d90368;
+    color: #820263;
+    font-family: fantasy;
 }
+
+input,select{
+    width: 100px;
+    height: 100px;
+    border: 1px solid #999999;
+    padding: 5px;
+    font-size: 60px;
+}
+option{
+    font-size: 20px;
+}
+button{
+    height: 100px;
+    font-size: 60px;
+}
+textarea{
+    width: 100%;
+    height: 200px;
+    font-size: 60px;
+    border: 1px solid #999999;
+}
+
+/*base navbar*/
+.base-navbar{
+    font-size: 40px;
+    padding:50px;
+}
+.base-navbar .dropdown-item{
+    font-size: 35px;
+}
+/*CookNavbar*/
+.cooknav .container-fluid {
+    background-color: #ffbf3f;
+    padding: 20px;
+}
+.cooknav .nav-item .nav-link{
+    color: white;
+    border-left: 8px solid;
+    margin-right: 5px;
+}
+/*Customer Navbar*/
+.customer-nav .phone, .customer-global-nav .phone{
+    color: #ffbf3f;
+    font-size: 30px;
+}
+
+

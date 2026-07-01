@@ -18,6 +18,13 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
-
+    Pusher\Pusher:
+        arguments:
+            $auth_key: '%env(PUSHER_KEY)%'
+            $secret: '%env(PUSHER_SECRET)%'
+            $app_id: '%env(PUSHER_APP_ID)%'
+            $options:
+                cluster: '%env(PUSHER_CLUSTER)%'
+                useTLS: true
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

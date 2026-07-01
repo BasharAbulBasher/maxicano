@@ -1,0 +1,223 @@
+{% extends 'customer.html.twig' %}
+
+{% block title %}Neu Address!{% endblock %}
+
+{% block body %}
+
+<style>
+
+    .address-create {
+        font-size:50px;
+        font-family: fantasy;
+    }
+      .address-create .title{
+          color: white;
+          font-size:70px;
+          background-color: #ffbf3f;
+          padding:15px;
+      }
+    .address-create .valid-error
+    {
+        font-size:30px;
+        margin-bottom:-1px;
+        color:red;
+    }
+    .address-create .btn-register
+    {
+        background-color:#820263;
+        color:white;
+         font-size:50px;
+    }
+    .address-create .addresses{
+    }
+    .address-create .addresses .address{
+        border:3px solid  #ffbf3f;
+        margin:5px;
+        padding:5px;
+    }
+     .address-create .addresses .address p{
+        margin-bottom:-1px;
+        font-size:30px;
+          color: #645a5a;
+     }
+    input
+    {
+        border:none;
+        border-bottom:1px solid #820263;
+    }
+    input::placeholder{
+         font-size:50px;
+    }
+    input:focus{
+        outline: none;
+    }
+    .address-create .back-to-home a{
+        font-size:30px;
+        color: #ffbf3f;
+        border-bottom:1px solid;
+
+     }
+</style>
+
+<div class="address-create row p-5">
+        <div class="col-12">
+                <h1 class="title">Neu Adress</h1>
+                <div class="mb-1 row">
+                    <label class="form-label col-12">Vorname*</label>
+                    <input id='firstName' type="text" class="col-12 h-50"  required>
+                    <p id="firstNameError" class="valid-error"></p>
+                </div>
+                <div class="mb-1 row">
+                    <label class="form-label col-12">Nachname*</label>
+                    <input id='lastName' type="text" class="col-12"  required>
+                    <p id="lastNameError" class="valid-error"></p>
+                </div>
+                <div class="mb-1 row">
+                    <label class="form-label col-12">Straße*</label>
+                    <input id='street' type="text" class="col-12"  required>
+                    <p id="streetError" class="valid-error"></p>
+                </div>
+                <div class="mb-1 row">
+                    <label class="form-label col-12">HausNr*</label>
+                    <input id='hausNr' type="text" class="col-12"  required>
+                    <p id="hausNrError" class="valid-error"></p>
+                </div>
+                <div class="mb-1 row">
+                    <label class="form-label col-12">PLZ*</label>
+                    <input id='plz' type="text" class="col-12"  required>
+                    <p id="plzError" class="valid-error"></p>
+                </div>
+                <div class="mb-1 row">
+                    <label class="form-label col-12">Stadt*</label>
+                    <input id='city' value='Essen' type="text" class="col-12 h-50 disable"  required>
+                </div>
+
+                <div class="w-100 text-center">
+                    <button onClick='create()'  class="btn w-50 btn-register">Speichern</button>
+                </div>
+
+                <div id="message"  class="message valid-error">
+                </div>
+        </div>
+
+        <div id="addresses" class="col-12 addresses mt-5">
+            <h1 class="title">Meine Addresse</h1>
+            <div id="content" class="row d-flex justify-content-center">
+                {% for address in addresses %}
+                <div class="address col-4">
+                    <div class="name row">
+                        <p class="col-6">{{address.firstName}}</p>
+                        <p class="col-6">{{address.lastName}}</p>
+                    </div>
+                    <div class="straat-hausNr row">
+                        <p class="col-6">{{address.street}}</p>
+                        <p class="col-6">{{address.hausNr}}</p>
+                    </div>
+                    <div class="city-plz row">
+                        <p class="col-6">{{address.plz}}</p>
+                        <p class="col-6">{{address.city}}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="back-to-home">
+            <a class="btn" href="{{ path('category.getAll') }}"> <i class="fa fa-chevron-right" aria-hidden="true"></i>
+            Back
+            </a>
+        </div>
+</div>
+<script>
+var addresses;
+//Add new Address Using Ajax-Request
+function create()
+{
+    reset();
+    if($("input").val() == false)
+    {
+        $("#message").text("Tragen Sie bitte alle deine Info")
+    }
+    else{
+    $.ajax({
+        url: '{{ path("address.save")}}',
+        data: {
+            firstName:  $("#firstName").val(),
+            lastName:   $("#lastName").val(),
+            street:     $("#street").val(),
+            hausNr:     $("#hausNr").val(),
+            plz:        $("#plz").val(),
+            city:       $("#city").val(),
+        },
+        type: 'POST',
+        success: function(data) {
+            console.log(data)
+            var success=data["data"]["success"];
+            var message=data["data"]["message"];
+            var errors=data["data"]["errors"];
+            addresses=data["addresses"];
+            console.log(addresses)
+
+            setValidationError(success, message, errors)
+        }
+    });
+    }
+}
+//Set Validation Errors
+function setValidationError(success, message, errors)
+{
+    //Set the Validation-Errors Messages
+    if(errors != null)
+    {
+        $.each(errors, function(index, error){
+            $("#"+index+"Error").text(error);
+        });
+    }
+    //Set Global Message
+    setGlobalMessage(success, message)
+}
+function reset()
+{
+    $(".valid-error").empty();
+}
+function setGlobalMessage(success, message)
+{
+    //Set the Global Message
+    if(success)
+    {
+        $("#message").append("<p class='text-success'>"+message+"</p>")
+        setAddresses()
+    }
+    else{
+        $("#message").append("<p class='text-danger'>"+message+"</p>")
+    }
+}
+
+function setAddresses()
+{
+    $("#content").empty();
+    $.each(addresses,function(index, address){
+        $("#content").append(
+                "<div class='address col-4'>"+
+                    "<div class='name row'>"+
+                        "<p class='col-6'>"+address['firstName']+"</p>"+
+                        "<p class='col-6'>"+address['lastName']+"</p>"+
+                    "</div>"+
+                    "<div class='straat-hausNr row'>"+
+                        "<p class='col-6'>"+address['street']+"</p>"+
+                        "<p class='col-6'>"+address['hausNr']+"</p>"+
+                    "</div>"+
+                    "<div class='city-plz row'>"+
+                        "<p class='col-6'>"+address['plz']+"</p>"+
+                        "<p class='col-6'>"+address['city']+"</p>"+
+                    "</div>"+
+                "</div>"
+        );
+    })
+
+}
+
+
+</script>
+
+
+{% endblock %}
