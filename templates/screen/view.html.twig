@@ -5,7 +5,9 @@
 
 {% block body %}
 <style>
-
+.body{
+    background-color:white;
+}
 .article{
      overflow:hidden;
     animation: scale_up 1s ease both, scale_down 1s ease 6s both;
@@ -26,6 +28,7 @@
     color: #ffbf3f;
     background-color:#820263;
     position:relative;
+    top:-20px;
     left:-100%;
     animation: move_righte  1s ease 1s both;
 }
@@ -35,11 +38,45 @@
 }
 #video{
     position:absolute;
-    top:-100%;
+    top:-150%;
     left:0;
 }
+.attr{
+    position:absolute;
+    top:0;
+    left:0;
+    height:100%;
+    width:100%;
+}
+.attr-cover{
+    overflow:hidden;
+}
+.attr-cover h1{
+    color: #ffbf3f;
+    border-bottom:3px solid ;
+    font-size:80px;
+    animation:opacity 1s ease 1s both;
+}
+.attr-cover h3{
+    color: #fdf2da;
+    font-size:50px;
+    animation:opacity 1s ease 1.5s both;
+}
 .moveDown{
-    animation: moveDown 2s ease both;
+    animation: moveDown 1s ease both;
+}
+.moveUp{
+    animation: moveUp 1s ease both;
+}
+ .wait-ajax
+{
+    position:fixed;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    background-color:black;
+    opacity:0.8;
 }
 
 @keyframes scale_up
@@ -63,7 +100,6 @@
 @keyframes move_righte {
     0% {
         left:-100%
-
     }
 
     100% {
@@ -78,10 +114,20 @@
 
 @keyframes moveDown {
     0% {
+        top:-150%
     }
 
     100% {
         top:0%
+    }
+}
+@keyframes moveUp {
+    0% {
+        top:0%
+    }
+
+    100% {
+        top:-150%
     }
 }
 @keyframes rotate {
@@ -94,11 +140,21 @@
 
     }
 }
+@keyframes opacity {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity:1;
+
+    }
+}
 
 </style>
 
 <div id="screen" class="screen container">
-    <div id="screen-body" class="body p-5">
+    <div id="screen-body" class="body">
     </div>
     <div id="werbung-cover">
     </div>
@@ -110,6 +166,20 @@
         {% endif %}
     </div>
     <input value="{{ data.screenTitle }}" id="screenTitle" type="hidden">
+    <div id="wait-ajax" class="wait-ajax d-flex align-items-center justify-content-center visually-hidden">
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+        <div class="spinner-grow text-warning" role="status">
+            <span class="visually-hidden">Loding</span>
+        </div>
+    </div>
 </div>
 <script>
     //Categories nesossory Veriables
@@ -125,9 +195,10 @@
     var werbungTimer;
     var curentWerbung=0;
     var werbungTime;
-    var finishWerbung=0;
+    var changeTimer=0;
+    var isWatched=false;
     //pusher Veriable
-    var pusher = new Pusher('913a250eb06be3f184c8', {
+    var pusher = new Pusher('d1b0c4a069dcf15c15b8', {
         cluster: 'eu'
     });
      //Fullscreen Using 'Event-click'
@@ -153,11 +224,13 @@
         success: function(data) {
             init(data);
         }
-    }); 
+    });
     //Play Using Pusher
     var channel=pusher.subscribe('screen');
+
     channel.bind('event', function(data) {
         var result=[];
+        $("#wait-ajax").removeClass("visually-hidden")
         if($("#screenTitle").val() == 'tv1')
         {
             result['categories']=data['tv1'];
@@ -173,6 +246,9 @@
             result['categories']=data['tv3'];
             result['werbungen']=data['tv3Werbungen'];
         }
+        setTimeout(function(){
+        $("#wait-ajax").addClass("visually-hidden")
+        },1000)
         init(result);
       });
     function init(data)
@@ -205,12 +281,14 @@
         //Update
         update();
     }
+
     function update()
     {
         //Update the Categories
         updateCategories()
         //Update the 'Werbungen'
         updateWerbungen()
+
     }
     function updateCategories()
     {
@@ -232,14 +310,20 @@
             curentCategory++
             setArticles(category);
         }
-
     }
     function updateWerbungen()
     {
-        //Inc WerbungTimer
-        werbungTimer++;
-        if(werbungTimer > werbungTime)
+        if(isWatched == false)
         {
+            //Inc WerbungTimer
+            werbungTimer++;
+        }else{
+            //Inc ChangeTimer
+            changeTimer++;
+        }
+        if(werbungTimer > 1500)
+        {
+            isWatched=true;
             //Reset the Timer
             werbungTimer=0;
             //Reset the CurentWerbung
@@ -254,7 +338,17 @@
             setWerbungTime()
             //Inc the curent Werbung
             curentWerbung++
-            displayWerbung()
+            displayWerbung();
+        }
+        if(changeTimer > werbungTime)
+        {
+            changeTimer=0;
+            isWatched=false;
+            $("#video").removeClass("moveDown");
+            $("#video").addClass("moveUp");
+            $("#attr").removeClass("moveDown");
+            $("#attr").addClass("moveUp");
+
         }
     }
     function setWerbungTime()
@@ -289,9 +383,20 @@
             "<video id='video' muted width='100%; height:100%'>"+
                 "<source src='/file/werbung/"+werbung['video']+"' type='video/mp4'>"+
             "</video>");
-        $("#video").addClass('moveDown');
-         $("#video")[0].play();
-
+        $("#video").removeClass("moveUp");
+        $("#video").addClass("moveDown");
+        $("#video")[0].play();
+        //Animate Werbung Arrtibutes
+          $("#werbung-cover").append(
+                "<div id='attr' class='attr d-flex justify-content-center align-items-center'>"+
+                    "<div class='attr-cover text-center'>"+
+                        "<h1>"+werbung['title']+"</h1>"+
+                        "<h3>"+werbung['description']+"</h3>"+
+                    "</div>"+
+                "</div>"
+          )
+        $("#atrr").removeClass("moveUp");
+        $("#attr").addClass("moveDown");
     }
     function setArticles(category)
     {
@@ -309,7 +414,6 @@
         })
         //Get the Height of the Div Article
         var height=getArticleHeight(category);
-        console.log(height);
         //Set the Height of the Article
         $(".article").css({
             'height':height+'px',
