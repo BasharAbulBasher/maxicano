@@ -25,7 +25,7 @@ final class CategoryController extends AbstractController
     #[Route('/admin/category/save', name: 'category.save', methods:['POST'])]
     public function save(Request $request, EntityManagerInterface $entityManager)
     {
-        $storage=$this->getParameter('kernel.project_dir').'/public/file';
+        $storage=$this->getParameter('kernel.project_dir').'/file';
         return $this->redirectToRoute('category.create', [
             'data' =>$this->categoryService->save($request, $entityManager, $storage)
         ]);
@@ -49,7 +49,7 @@ final class CategoryController extends AbstractController
     #[Route('/admin/category/update', name: 'category.update', methods: ['POST'])]
     public function update(Request $request, EntityManagerInterface $entityManager)
     {
-        $storage= $this->getParameter('kernel.project_dir') .'/public/file';
+        $storage= $this->getParameter('kernel.project_dir') .'/file';
         return $this->redirectToRoute('category.edit', [
             'id'=>$request->get('id'),
             'data' => $this->categoryService->update($request, $entityManager, $storage),
@@ -66,7 +66,7 @@ final class CategoryController extends AbstractController
     #[Route('/admin/category/remove', name: 'category.remove', methods: ['POST'])]
     public function remove(Request $request, EntityManagerInterface $entityManager)
     {
-        $storage= $this->getParameter('kernel.project_dir') . '/public/file';
+        $storage= $this->getParameter('kernel.project_dir') . '/file';
 
        return $this->redirectToRoute('category.delete',[
             'id'=>$request->get('id'),
