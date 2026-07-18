@@ -7,27 +7,24 @@
     .article-show .accordion-button {
         background-color: white;
         color: #820263;
+        font-size:100px;
     }
 
     .article-show .btn-update {
         background-color: #820263;
         color: white;
-        font-size: 30px;
     }
 
     .article-show .btn-delete {
         background-color: #ffbf3f;
         color: white;
-        font-size: 30px;
 
     }
-
-    .accordion-button {
-        font-size: 40px;
+    .article-show  .accordion-body p {
+        font-size: 60px;
     }
-
-    .accordion-body p {
-        font-size: 35px;
+    .article-show .btns a{
+        font-size: 70px;
     }
 </style>
 
@@ -35,8 +32,8 @@
     <div class="accordion" id="accordionExample">
         {% for category in categories %}
         <div class="accordion-item">
-            <h2 class="accordion-header" id="heading{{ category.id }}">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+            <h2 class="accordion-header p-5" id="heading{{ category.id }}">
+                <button class="accordion-button " type="button" data-bs-toggle="collapse"
                     data-bs-target="#collapse{{ category.id }}" aria-expanded="true"
                     aria-controls="collapse{{ category.id }}">
                     {{ category.title }}
@@ -56,8 +53,9 @@
                             <p>Big:{{article.price}}€</p>
                         </div>
                         <div class="btns col-12 m-2">
-                            <a href="/user/article/edit/{{ article.id }}" class="btn btn-update w-100">Update</a>
-                            <a href="/user/article/delete/{{ article.id }}" class="btn btn-delete w-100">Delete</a>
+                            <a href="/user/article/edit/{{ article.id }}" class="btn btn-update w-100">تحديث
+                            </a>
+                            <a href="/user/article/delete/{{ article.id }}" class="btn btn-delete w-100">مسح</a>
                         </div>
                     </div>
                     {% endfor %}

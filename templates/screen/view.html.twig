@@ -36,11 +36,12 @@
     display:inline-block;
      animation: pulse  1s ease 1s infinite;
 }
-#video{
+#video, #image-cover{
     position:absolute;
     top:-150%;
     left:0;
 }
+
 .attr{
     position:absolute;
     top:0;
@@ -346,9 +347,10 @@
             isWatched=false;
             $("#video").removeClass("moveDown");
             $("#video").addClass("moveUp");
-            $("#attr").removeClass("moveDown");
+            $("#video").removeClass("moveDown");
+            $("#image-cover").addClass("moveUp");
+            $("#image-cover").removeClass("moveDown");
             $("#attr").addClass("moveUp");
-
         }
     }
     function setWerbungTime()
@@ -371,8 +373,36 @@
         }
         //Display Image
         else{
-            //displayImage(werbung)
+            displayImage()
         }
+    }
+    function displayImage()
+    {
+        //Empty the Werbung Cover
+        $("#werbung-cover").empty();
+        //Set the Image in Werbung-Cover
+         $("#werbung-cover").append(
+            "<div id='image-cover' class='image-cover'>"+
+                "<img id='image-werbung' src='/file/werbung/"+werbung['image']+"'>"+
+            "</div>");
+            $("#image-werbung").css({
+                "width": $(window).width()+'px',
+                "height": $(window).height()+'px'
+            })
+            $("#image-cover").removeClass("moveUp");
+            $("#image-cover").addClass("moveDown");
+        //Animate Werbung Arrtibutes
+          $("#werbung-cover").append(
+                "<div id='attr' class='attr d-flex justify-content-center align-items-center'>"+
+                    "<div class='attr-cover text-center'>"+
+                        "<h1>"+werbung['title']+"</h1>"+
+                        "<h3>"+werbung['description']+"</h3>"+
+                    "</div>"+
+                "</div>"
+          )
+        $("#atrr").removeClass("moveUp");
+        $("#attr").addClass("moveDown");
+
     }
     function displayVideo()
     {

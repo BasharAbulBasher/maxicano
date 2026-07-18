@@ -30,11 +30,11 @@ textarea{
 
 /*base navbar*/
 .base-navbar{
-    font-size: 40px;
+    font-size: 60px;
     padding:50px;
 }
 .base-navbar .dropdown-item{
-    font-size: 35px;
+    font-size: 50px;
 }
 /*CookNavbar*/
 .cooknav .container-fluid {

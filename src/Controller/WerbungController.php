@@ -28,7 +28,7 @@ final class WerbungController extends AbstractController
     {
         $screenId=4;
         //dd($request->get("screen$screenId"));
-        $storage = $this->getParameter("kernel.project_dir") . "/file";
+        $storage = $this->getParameter("kernel.project_dir") . "/public/file";
         return $this->redirectToRoute("werbung.create",[
             "data"=>$this->werbungService->save($request, $entityManager, $storage)
         ]);
@@ -53,7 +53,7 @@ final class WerbungController extends AbstractController
     #[Route('/user/werbung/update', name: 'werbung.update', methods: ['POST'])]
     public function update(Request $request, EntityManagerInterface $entityManager)
     {
-         $storage = $this->getParameter("kernel.project_dir") . "/file";
+         $storage = $this->getParameter("kernel.project_dir") . "/public/file";
         return $this->redirectToRoute("werbung.edit",[
             'data'=>$this->werbungService->update($request, $entityManager, $storage),
             'id'=>$request->get('id')
