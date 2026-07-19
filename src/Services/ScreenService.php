@@ -188,7 +188,7 @@ class ScreenService
         //Get the Screen
         $screen = $entityManager->getRepository(Screen::class)->findOneBy(['title' => $request->get('screenTitle')]);
         //$screen = $entityManager->getRepository(Screen::class)->findOneBy(['title' => 'tv1']);
-
+ 
         //Get All Articles by Screen Using visit Method in ArticleScreen-Repository
         $articles=$entityManager->getRepository(ActicleScreen::class)->visit($screen->getId());
         //Get All Categories

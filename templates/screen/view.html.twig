@@ -12,18 +12,19 @@
      overflow:hidden;
     animation: scale_up 1s ease both, scale_down 1s ease 6s both;
 }
+.article-nr{
+    color: #ffbf3f;
+}
 .article-title{
     height:20%;
     position:relative;
     left:-100%;
     animation: move_righte  1s ease 1s both;
-
 }
 .article-image{
     height:60%;
     width:100%
 }
-
 .article-price{
     color: #ffbf3f;
     background-color:#820263;
@@ -41,7 +42,6 @@
     top:-150%;
     left:0;
 }
-
 .attr{
     position:absolute;
     top:0;
@@ -69,7 +69,7 @@
 .moveUp{
     animation: moveUp 1s ease both;
 }
- .wait-ajax
+.wait-ajax
 {
     position:fixed;
     width:100%;
@@ -79,7 +79,12 @@
     background-color:black;
     opacity:0.8;
 }
-
+.werbung-price
+{
+    font-size:100px;
+    color: #fdf2da;
+    animation: pulse  1s ease 1s infinite;
+}
 @keyframes scale_up
 {
     0%{
@@ -394,12 +399,16 @@
         //Animate Werbung Arrtibutes
           $("#werbung-cover").append(
                 "<div id='attr' class='attr d-flex justify-content-center align-items-center'>"+
-                    "<div class='attr-cover text-center'>"+
+                    "<div id='attr-cover' class='attr-cover text-center'>"+
                         "<h1>"+werbung['title']+"</h1>"+
                         "<h3>"+werbung['description']+"</h3>"+
                     "</div>"+
                 "</div>"
           )
+          if(werbung['price'] != null)
+          {
+              $("#attr-cover").append("<p class='werbung-price'>"+werbung['price']+"€</p>");
+          }
         $("#atrr").removeClass("moveUp");
         $("#attr").addClass("moveDown");
 
@@ -425,6 +434,10 @@
                     "</div>"+
                 "</div>"
           )
+        if(werbung['price'] != null)
+          {
+              $("#attr-cover").append("<p class='werbung-price'>"+werbung['price']+"€</p>");
+          }
         $("#atrr").removeClass("moveUp");
         $("#attr").addClass("moveDown");
     }
@@ -437,7 +450,7 @@
         //Set the Articles in Div Category
         $.each(category, function(index, article){
              $("#category").append("<div class='article col-6'>"+
-                "<h1 class='article-title'>"+article['title']+"</h1>"+
+                "<h1 class='article-title'><span class='article-nr'>Nr."+article['nr'] +"</span>"+article['title']+"</h1>"+
                 "<img  class='article-image' src='/file/article/"+article['image']+"'>"+
                 "<h1 class='article-price p-2 text-center' class='price'><span>"+article['price']+"€</span></h1>"+
              "</div>");

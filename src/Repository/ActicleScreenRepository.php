@@ -47,7 +47,7 @@ class ActicleScreenRepository extends ServiceEntityRepository
                     ->join('a.article','art')
                     ->join('art.category','cat')
                     ->join('a.screen','scr')
-                    ->select('cat.title as categoyTitle, art.title as title, art.description as description, art.price as price, art.image as image, scr.title as screenTitle ,scr.id as screenId, cat.id as categoryId')
+                    ->select('cat.title as categoyTitle, art.title as title, art.description as description, art.price as price, art.image as image, art.nr as nr ,scr.title as screenTitle ,scr.id as screenId, cat.id as categoryId')
                     ->andWhere('scr.id = :screenId')
                     ->setParameter('screenId', $screenId)
                     ->getQuery()

@@ -111,7 +111,7 @@ final class ScreenController extends AbstractController
             'categories'=>$this->screenService->visit($request, $entityManager)['categories'],
             'werbungen'=>$this->screenService->visit($request, $entityManager)['werbungen']
         ]);
-    }
+    } 
 
 
 
