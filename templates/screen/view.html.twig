@@ -407,7 +407,7 @@
           )
           if(werbung['price'] != null)
           {
-              $("#attr-cover").append("<p class='werbung-price'>"+werbung['price']+"€</p>");
+              $("#attr-cover").append("<p class='werbung-price'>"+Number(werbung['price']).toFixed(2)+"€</p>");
           }
         $("#atrr").removeClass("moveUp");
         $("#attr").addClass("moveDown");
@@ -436,7 +436,7 @@
           )
         if(werbung['price'] != null)
           {
-              $("#attr-cover").append("<p class='werbung-price'>"+werbung['price']+"€</p>");
+              $("#attr-cover").append("<p class='werbung-price'>"+Number(werbung['price']).toFixed(2)+"€</p>");
           }
         $("#atrr").removeClass("moveUp");
         $("#attr").addClass("moveDown");
@@ -452,7 +452,7 @@
              $("#category").append("<div class='article col-6'>"+
                 "<h1 class='article-title'><span class='article-nr'>Nr."+article['nr'] +"</span>"+article['title']+"</h1>"+
                 "<img  class='article-image' src='/file/article/"+article['image']+"'>"+
-                "<h1 class='article-price p-2 text-center' class='price'><span>"+article['price']+"€</span></h1>"+
+                "<h1 class='article-price p-2 text-center' class='price'><span>"+Number(article['price']).toFixed(2)+"€</span></h1>"+
              "</div>");
         })
         //Get the Height of the Div Article
@@ -475,3 +475,4 @@ animate();
 
 </script>
 {% endblock %}
+
