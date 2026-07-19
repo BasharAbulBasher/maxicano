@@ -67,7 +67,7 @@ final class WerbungController extends AbstractController
     #[Route('/user/werbung/remove', name: 'werbung.remove', methods: ['POST'])]
     public function remove(Request $request, EntityManagerInterface $entityManager)
     {
-        $storage=$this->getParameter("kernel.project_dir") . "/file";
+        $storage=$this->getParameter("kernel.project_dir") . "/public/file";
         return $this->redirectToRoute("werbung.show",[
             'data'=>$this->werbungService->remove($request, $entityManager, $storage)
         ]);

@@ -26,7 +26,7 @@ final class ArticleController extends AbstractController
     #[Route('/user/article/save', name: 'article.save', methods: ['POST'])]
     public function save (Request $request, EntityManagerInterface $entityManager)
     {
-        $storage = $this->getParameter("kernel.project_dir") . "/file";
+        $storage = $this->getParameter("kernel.project_dir") . "/public/file";
         return $this->redirectToRoute('article.create', [
             'data' => $this->articleService->save($request, $entityManager, $storage),
         ]);
@@ -54,7 +54,7 @@ final class ArticleController extends AbstractController
     #[Route('/user/article/update', name: 'article.update', methods: ['POST'])]
     public function update (Request $request, EntityManagerInterface $entityManager)
     {
-        $storage = $this->getParameter("kernel.project_dir") . "/file";
+        $storage = $this->getParameter("kernel.project_dir") . "/public/file";
 
         return $this->redirectToRoute("article.edit",[
             'id'=>$request->get('id'),
@@ -72,7 +72,7 @@ final class ArticleController extends AbstractController
     #[Route('/user/article/remove', name: 'article.remove', methods: ['POST'])]
     public function remove (Request $request, EntityManagerInterface $entityManager)
     {
-        $storage = $this->getParameter("kernel.project_dir") . "/file";
+        $storage = $this->getParameter("kernel.project_dir") . "/public/file";
         return $this->redirectToRoute('article.delete',[
             'id'=>$request->get('id'),
             'data'=>$this->articleService->remove($request, $entityManager, $storage)
